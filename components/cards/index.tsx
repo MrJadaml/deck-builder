@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from 'react'
 import firebase from 'firebase/compat/app'
-import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { Card } from '../card'
+import styles from './cards.module.css'
 
 interface CardsTypes {
   cards?: Array<any>
@@ -25,7 +25,7 @@ export const Cards: FC<CardsTypes> = ({ }) => {
 
 
   return (
-    <div>
+    <div className={styles.wrapper}>
       {cards.map(({ title, description, flavorText }) => (
         <Card
           title={title}

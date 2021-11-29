@@ -1,11 +1,24 @@
 import { FC, useState } from 'react'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/auth'
+import 'firebase/compat/firestore'
+import { useAuthState } from 'react-firebase-hooks/auth'
 import { Card } from '../card'
 import styles from './card-form.module.css'
+
+const db = firebase.firestore()
+
+interface Card {
+  title: string
+  description: string
+  flavorText: string
+}
 
 export const CardForm: FC = () => {
   const [title, setTitle] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [flavorText, setFlavorText] = useState<string>('')
+  const [user, loading, error] = useAuthState(firebase.auth())
 
   const handleTitle = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(evt.target.value)
@@ -19,13 +32,27 @@ export const CardForm: FC = () => {
     setFlavorText(evt.target.value)
   }
 
-  const handleSave = () => {
-    console.log('saved!')
+  const handleSave = async (card: Card) => {
+    try {
+      db.collection("cards").add(card)
+    } catch (err) {
+      console.log(`#handleSave Error: ${err}`)
+    }
+  }
+
+  const handleSubmit = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    evt.preventDefault()
+
+    handleSave({
+      title,
+      description,
+      flavorText,
+    })
   }
 
   return (
     <div className={styles.wrapper}>
-      <form onSubmit={handleSave} className={styles.form}>
+      <form onSubmit={handleSubmit} className={styles.form}>
         <input
           className={styles.field}
           placeholder="Title"
