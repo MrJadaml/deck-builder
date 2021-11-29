@@ -1,0 +1,91 @@
+import { FC, useEffect, useState } from 'react'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/auth'
+import 'firebase/compat/firestore'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { useCollection } from 'react-firebase-hooks/firestore'
+import styles from './decks.module.css'
+
+const db = firebase.firestore()
+
+const Decks: FC = ({ }) => {
+  const [isModalVisible, setIsModalVisible] = useState<bool>(false)
+  const [deckName, setDeckName] = useState<string>('')
+  const [decks, setDecks] = useState([])
+  const [deckDocs, deckDocsLoading, deckDocsError] = useCollection(
+    firebase.firestore().collection('decks'),
+    {},
+  )
+  const [user, loading, error] = useAuthState(firebase.auth())
+
+  const handleToggelModal = () => {
+    setIsModalVisible(!isModalVisible)
+  }
+
+  const handleDeckName = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setDeckName(evt.target.value)
+  }
+
+  const handleSubmit = () => {
+    try {
+      db.collection('decks').add({ name: deckName })
+      setIsModalVisible(false)
+    } catch (err) {
+      console.log(`#handleCreateDeck Error: ${err}`)
+    }
+  }
+
+  useEffect(() => {
+    if (!deckDocsLoading && decks) {
+      const docks = deckDocs.docs.map(doc => doc.data())
+      setDecks(docks)
+    }
+  }, [deckDocs])
+
+  return (
+    <div className={styles.wrapper}>
+      <h1>
+        Decks
+      </h1>
+
+      <div>
+        <button onClick={handleToggelModal}>
+          (+) New Deck
+        </button>
+      </div>
+
+      <div>
+        Decks...
+      </div>
+
+      <div>
+        {decks.map((deck) => (
+          <div key={deck.name}>{deck.name}</div>
+        ))}
+      </div>
+
+      {isModalVisible && (
+        <div>
+          <h2>Create a New Deck</h2>
+
+          <form onSubmit={handleSubmit}>
+            <input
+              className={styles.field}
+              placeholder="Deck Name..."
+              onChange={handleDeckName}
+            />
+
+            <input
+              className={styles.field}
+              type="submit"
+              value="Save"
+             />
+          </form>
+          <button onClick={handleToggelModal}>Cancel</button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default Decks

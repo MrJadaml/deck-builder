@@ -34,7 +34,7 @@ export const CardForm: FC = () => {
 
   const handleSave = async (card: Card) => {
     try {
-      db.collection("cards").add(card)
+      db.collection('cards').add(card)
     } catch (err) {
       console.log(`#handleSave Error: ${err}`)
     }
@@ -55,19 +55,19 @@ export const CardForm: FC = () => {
       <form onSubmit={handleSubmit} className={styles.form}>
         <input
           className={styles.field}
-          placeholder="Title"
+          placeholder="Title..."
           onChange={handleTitle}
         />
 
         <input
           className={styles.field}
-          placeholder="Description"
+          placeholder="Description..."
           onChange={handleDescription}
         />
 
         <input
           className={styles.field}
-          placeholder="Flavor Text"
+          placeholder="Flavor Text..."
           onChange={handleFlavorText}
         />
 

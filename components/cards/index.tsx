@@ -23,7 +23,6 @@ export const Cards: FC<CardsTypes> = ({ }) => {
     }
   }, [cardDocs])
 
-
   return (
     <div className={styles.wrapper}>
       {cards.map(({ title, description, flavorText }) => (
