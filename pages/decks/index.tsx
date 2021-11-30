@@ -54,13 +54,14 @@ const Decks: FC = ({ }) => {
         </button>
       </div>
 
-      <div>
-        Decks...
-      </div>
-
-      <div>
+      <div className={styles.decks}>
         {decks.map((deck) => (
-          <div key={deck.name}>{deck.name}</div>
+          <div
+            key={deck.name}
+            className={styles.tile}
+          >
+            <h2>{deck.name}</h2>
+          </div>
         ))}
       </div>
 
