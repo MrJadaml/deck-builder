@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react'
+import Link from 'next/link'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/auth'
 import 'firebase/compat/firestore'
@@ -37,8 +38,14 @@ const Decks: FC = ({ }) => {
 
   useEffect(() => {
     if (!deckDocsLoading && decks) {
-      const docks = deckDocs.docs.map(doc => doc.data())
-      setDecks(docks)
+      const docs = deckDocs.docs.map(doc => {
+        return {
+          id: doc.id,
+          ...doc.data()
+        }
+      })
+
+      setDecks(docs)
     }
   }, [deckDocs])
 
@@ -56,12 +63,14 @@ const Decks: FC = ({ }) => {
 
       <div className={styles.decks}>
         {decks.map((deck) => (
-          <div
-            key={deck.name}
-            className={styles.tile}
-          >
-            <h2>{deck.name}</h2>
-          </div>
+          <Link href={`/decks/${deck.id}`}>
+            <div
+              key={deck.name}
+              className={styles.tile}
+            >
+              <h2>{deck.name}</h2>
+            </div>
+          </Link>
         ))}
       </div>
 
