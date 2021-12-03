@@ -1,11 +1,12 @@
 import React, { FC } from 'react'
 import Link from 'next/link'
-import firebase from 'firebase/compat/app'
-import { getAuth, signOut } from "firebase/auth"
+import firebase from '../../firebase'
+import { getAuth, signOut } from "firebase/compat/auth"
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 export const Layout: FC<> = ({ children }): JSX.Element => {
-  const [user, loading, error] = useAuthState(firebase.auth())
+  const authy = firebase.auth()
+  const [user, loading, error] = useAuthState(authy)
 
   const handleSignOUt = async () => {
     try {

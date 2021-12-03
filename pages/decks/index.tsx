@@ -1,8 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import Link from 'next/link'
-import firebase from 'firebase/compat/app'
-import 'firebase/compat/auth'
-import 'firebase/compat/firestore'
+import firebase from '../../firebase'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import styles from './decks.module.css'
@@ -62,11 +60,11 @@ const Decks: FC = ({ }) => {
 
       <div className={styles.decks}>
         {decks.map((deck) => (
-          <Link href={`/decks/${deck.id}`}>
-            <div
-              key={deck.name}
-              className={styles.tile}
-            >
+          <Link
+            key={deck.name}
+            href={`/decks/${deck.id}`}
+          >
+            <div className={styles.tile}>
               <h2>{deck.name}</h2>
             </div>
           </Link>

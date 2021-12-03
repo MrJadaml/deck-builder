@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import firebase from 'firebase/compat/app'
-import 'firebase/compat/firestore'
+import firebase from '../../firebase'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import styles from './deck.module.css'
 

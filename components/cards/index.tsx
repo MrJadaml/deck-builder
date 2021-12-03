@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import firebase from 'firebase/compat/app'
-import 'firebase/compat/firestore'
+import firebase from '../../firebase'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { Card } from '../card'
 import styles from './cards.module.css'

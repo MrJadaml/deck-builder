@@ -1,12 +1,9 @@
 import React, { FC, useEffect } from 'react'
 import cookie from 'js-cookie'
 import { AppProps } from 'next/app'
-import firebase from 'firebase/compat/app'
-import 'firebase/compat/auth'
+import firebase from '../firebase'
 import { firebaseConfig } from '../firebase/client-app'
 import { Layout } from '../components/layout'
-
-firebase.initializeApp(firebaseConfig)
 
 const MyApp: FC<AppProps> = ({
   Component,

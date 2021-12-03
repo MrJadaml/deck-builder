@@ -1,7 +1,5 @@
 import { FC, useState } from 'react'
-import firebase from 'firebase/compat/app'
-import 'firebase/compat/auth'
-import 'firebase/compat/firestore'
+import firebase from '../../firebase'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { Card } from '../card'
 import styles from './card-form.module.css'

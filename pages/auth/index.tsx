@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import firebase from 'firebase/compat/app'
-import 'firebase/compat/auth'
+import firebase from '../../firebase'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
 
 const uiConfig = {
@@ -13,7 +12,7 @@ const uiConfig = {
 const Auth: FC<> = ({}): JSX.Element => {
   return (
     <div>
-      <h1>hi</h1>
+      <h1>Log In</h1>
       <StyledFirebaseAuth
         uiConfig={uiConfig}
         firebaseAuth={firebase.auth()}
