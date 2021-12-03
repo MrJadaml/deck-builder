@@ -27,6 +27,7 @@ export const Cards: FC<CardsTypes> = ({ }) => {
     <div className={styles.wrapper}>
       {cards.map(({ title, description, flavorText }) => (
         <Card
+          key={title}
           title={title}
           description={description}
           flavorText={flavorText}

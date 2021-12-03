@@ -17,7 +17,6 @@ const Decks: FC = ({ }) => {
     firebase.firestore().collection('decks'),
     {},
   )
-  const [user, loading, error] = useAuthState(firebase.auth())
 
   const handleToggelModal = () => {
     setIsModalVisible(!isModalVisible)
