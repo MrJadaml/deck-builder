@@ -1,11 +1,12 @@
 import React, { FC } from 'react'
-import firebase from '../../firebase'
+import { firebase, auth } from '../../firebase'
+import { GoogleAuthProvider } from 'firebase/auth'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
 
 const uiConfig = {
   signInSuccessUrl: '/',
   signInOptions: [
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    GoogleAuthProvider.PROVIDER_ID,
   ],
 }
 
@@ -15,7 +16,7 @@ const Auth: FC<> = ({}): JSX.Element => {
       <h1>Log In</h1>
       <StyledFirebaseAuth
         uiConfig={uiConfig}
-        firebaseAuth={firebase.auth()}
+        firebaseAuth={auth}
       />
     </div>
   )

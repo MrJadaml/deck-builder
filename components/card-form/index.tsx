@@ -1,6 +1,6 @@
-import { FC, useState } from 'react'
-import firebase from '../../firebase'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import { FC, useContext, useState } from 'react'
+import { firebase } from '../../firebase'
+import { AuthContext } from '../../context/auth'
 import { Card } from '../card'
 import styles from './card-form.module.css'
 
@@ -13,10 +13,10 @@ interface Card {
 }
 
 export const CardForm: FC = () => {
+  const [ user ] = useContext(AuthContext)
   const [title, setTitle] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [flavorText, setFlavorText] = useState<string>('')
-  const [user, loading, error] = useAuthState(firebase.auth())
 
   const handleTitle = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(evt.target.value)

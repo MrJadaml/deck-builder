@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import Link from 'next/link'
 import firebase from '../../firebase'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import styles from './decks.module.css'
 
