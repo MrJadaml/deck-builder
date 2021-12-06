@@ -1,6 +1,7 @@
 import { createContext, FC, useEffect, useState } from 'react'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import firebase from '../firebase'
+import { firebase, db } from '../firebase'
+import { doc, setDoc } from 'firebase/firestore'
 
 export const AuthContext = createContext({})
 
@@ -15,7 +16,17 @@ export const AuthProvider: FC = ({ children }): JSX.Element => {
   const auth = getAuth()
 
   useEffect(() => {
-    onAuthStateChanged(auth, (authUser) => {
+    onAuthStateChanged(auth, async (authUser) => {
+      const firestore = firebase.firestore()
+      const userDoc = await db.collection('users').doc(authUser.uid).get()
+
+      if (!userDoc.exists) {
+        await setDoc(doc(db, 'users', authUser.uid), {
+          name: authUser.displayName,
+          email: authUser.email,
+        })
+      }
+
       if (authUser) {
         const requiredData = {
           name: authUser.displayName,
@@ -24,6 +35,7 @@ export const AuthProvider: FC = ({ children }): JSX.Element => {
 
         setUser(requiredData)
         setCurrentUser(authUser)
+
       } else {
         setCurrentUser(null)
       }
