@@ -24,7 +24,7 @@ const Decks: FC = ({ }) => {
     })
 
     setDecks(docs)
-  })
+  }, [])
 
   const handleToggelModal = () => {
     setIsModalVisible(!isModalVisible)

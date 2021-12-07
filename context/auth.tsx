@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { firebase, db } from '../firebase'
 import { doc, setDoc } from 'firebase/firestore'
 
-export const AuthContext = createContext({})
+export const AuthContext = createContext()
 
 export const AuthProvider: FC = ({ children }): JSX.Element => {
   const [currentUser, setCurrentUser] = useState(null)
@@ -18,20 +18,21 @@ export const AuthProvider: FC = ({ children }): JSX.Element => {
   useEffect(() => {
     onAuthStateChanged(auth, async (authUser) => {
       const firestore = firebase.firestore()
-      const userDoc = await db.collection('users').doc(authUser.uid).get()
-
-      if (!userDoc.exists) {
-        await setDoc(doc(db, 'users', authUser.uid), {
-          name: authUser.displayName,
-          email: authUser.email,
-        })
-      }
 
       if (authUser) {
         const requiredData = {
           id: authUser.uid,
           name: authUser.displayName,
           email: authUser.email,
+        }
+
+        const userDoc = await db.collection('users').doc(authUser.uid).get()
+
+        if (!userDoc.exists) {
+          await setDoc(doc(db, 'users', authUser.uid), {
+            name: authUser.displayName,
+            email: authUser.email,
+          })
         }
 
         setUser(requiredData)
@@ -49,8 +50,9 @@ export const AuthProvider: FC = ({ children }): JSX.Element => {
     return <>Loading...</>
   }
 
+console.log('a', user)
   return (
-    <AuthContext.Provider value={{ user, isLoading }}>
+    <AuthContext.Provider value={{ user, setUser, isLoading }}>
       {children}
     </AuthContext.Provider>
   )
