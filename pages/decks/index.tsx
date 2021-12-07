@@ -2,7 +2,7 @@ import { FC, useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { AuthContext } from '../../context/auth'
 import { firebase, db } from '../../firebase'
-import { useCollection } from 'react-firebase-hooks/firestore'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import styles from './decks.module.css'
 
 const Decks: FC = ({ }) => {
@@ -10,10 +10,21 @@ const Decks: FC = ({ }) => {
   const [isModalVisible, setIsModalVisible] = useState<bool>(false)
   const [deckName, setDeckName] = useState<string>('')
   const [decks, setDecks] = useState([])
-  const [deckDocs, deckDocsLoading, deckDocsError] = useCollection(
-    firebase.firestore().collection('decks'),
-    {},
-  )
+
+  useEffect(async () => {
+    const decksRef = collection(db, 'decks')
+    const q = query(decksRef, where('owners', 'array-contains', user.id))
+    const deckDocs = await getDocs(q)
+
+    const docs = deckDocs.docs.map(doc => {
+      return {
+        id: doc.id,
+        ...doc.data()
+      }
+    })
+
+    setDecks(docs)
+  })
 
   const handleToggelModal = () => {
     setIsModalVisible(!isModalVisible)
@@ -35,19 +46,6 @@ const Decks: FC = ({ }) => {
       console.log(`#handleCreateDeck Error: ${err}`)
     }
   }
-
-  useEffect(() => {
-    if (!deckDocsLoading && decks) {
-      const docs = deckDocs.docs.map(doc => {
-        return {
-          id: doc.id,
-          ...doc.data()
-        }
-      })
-
-      setDecks(docs)
-    }
-  }, [deckDocs])
 
   return (
     <div className={styles.wrapper}>
