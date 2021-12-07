@@ -21,7 +21,6 @@ export const Layout: FC<> = ({ children }): JSX.Element => {
     }
   }
 
-console.log(router.pathname)
   return (
     <div>
       <header>

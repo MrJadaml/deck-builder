@@ -2,7 +2,7 @@ import { FC, useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { AuthContext } from '../../context/auth'
 import { firebase, db } from '../../firebase'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore'
 import styles from './decks.module.css'
 
 const Decks: FC = ({ }) => {
@@ -34,12 +34,25 @@ const Decks: FC = ({ }) => {
     setDeckName(evt.target.value)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     try {
-      db.collection('decks').add({
+      evt.preventDefault()
+
+      const nextDeck = {
         name: deckName,
         owners: [user.id],
-      })
+      }
+
+      const docRef = db.collection('decks').add(nextDeck)
+      const doc = await docRef
+
+      setDecks([
+        ...decks,
+        {
+          id: doc.id,
+          ...nextDeck,
+        }
+      ])
 
       setIsModalVisible(false)
     } catch (err) {
@@ -57,19 +70,6 @@ const Decks: FC = ({ }) => {
         <button onClick={handleToggelModal}>
           (+) New Deck
         </button>
-      </div>
-
-      <div className={styles.decks}>
-        {decks.map((deck) => (
-          <Link
-            key={deck.name}
-            href={`/decks/${deck.id}`}
-          >
-            <div className={styles.tile}>
-              <h2>{deck.name}</h2>
-            </div>
-          </Link>
-        ))}
       </div>
 
       {isModalVisible && (
@@ -92,6 +92,19 @@ const Decks: FC = ({ }) => {
           <button onClick={handleToggelModal}>Cancel</button>
         </div>
       )}
+
+      <div className={styles.decks}>
+        {decks.map((deck) => (
+          <Link
+            key={deck.name}
+            href={`/decks/${deck.id}`}
+          >
+            <div className={styles.tile}>
+              <h2>{deck.name}</h2>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   )
 }

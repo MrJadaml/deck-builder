@@ -50,7 +50,6 @@ export const AuthProvider: FC = ({ children }): JSX.Element => {
     return <>Loading...</>
   }
 
-console.log('a', user)
   return (
     <AuthContext.Provider value={{ user, setUser, isLoading }}>
       {children}
