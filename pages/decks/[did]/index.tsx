@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { firebase, db } from '../../../firebase'
-import { useCollection } from 'react-firebase-hooks/firestore'
+import { CardForm } from '../../../components/card-form'
 import { Cards } from '../../../components/cards'
 import styles from './deck.module.css'
 
@@ -22,6 +22,8 @@ const Deck: FC = ({ name }) => {
     <div className={styles.wrapper}>
       <h1>{deck.name}</h1>
 
+      <CardForm />
+      <hr />
       <Cards deckID={did} />
     </div>
   )

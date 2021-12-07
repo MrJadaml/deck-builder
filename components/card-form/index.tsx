@@ -1,10 +1,9 @@
 import { FC, useContext, useState } from 'react'
-import { firebase } from '../../firebase'
+import { useRouter } from 'next/router'
+import { firebase, db } from '../../firebase'
 import { AuthContext } from '../../context/auth'
 import { Card } from '../card'
 import styles from './card-form.module.css'
-
-const db = firebase.firestore()
 
 interface Card {
   title: string
@@ -13,6 +12,8 @@ interface Card {
 }
 
 export const CardForm: FC = () => {
+  const router = useRouter()
+  const { did } = router.query
   const [ user ] = useContext(AuthContext)
   const [title, setTitle] = useState<string>('')
   const [description, setDescription] = useState<string>('')
@@ -32,7 +33,7 @@ export const CardForm: FC = () => {
 
   const handleSave = async (card: Card) => {
     try {
-      db.collection('cards').add(card)
+      db.collection(`decks/${did}/cards`).add(card)
     } catch (err) {
       console.log(`#handleSave Error: ${err}`)
     }

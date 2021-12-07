@@ -1,8 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { CardForm } from '../components/card-form'
-import { Cards } from '../components/cards'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
@@ -18,10 +16,6 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           A Deck Builder Builder
         </h1>
-
-        <CardForm />
-        <hr />
-        <Cards />
       </main>
 
       <footer className={styles.footer}>
