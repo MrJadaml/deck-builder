@@ -1,10 +1,9 @@
 import { FC, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import firebase from '../../firebase'
+import { firebase, db } from '../../../firebase'
 import { useCollection } from 'react-firebase-hooks/firestore'
+import { Cards } from '../../../components/cards'
 import styles from './deck.module.css'
-
-const db = firebase.firestore()
 
 const Deck: FC = ({ name }) => {
   const router = useRouter()
@@ -22,6 +21,8 @@ const Deck: FC = ({ name }) => {
   return (
     <div className={styles.wrapper}>
       <h1>{deck.name}</h1>
+
+      <Cards deckID={did} />
     </div>
   )
 }

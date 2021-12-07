@@ -29,6 +29,7 @@ export const AuthProvider: FC = ({ children }): JSX.Element => {
 
       if (authUser) {
         const requiredData = {
+          id: authUser.uid,
           name: authUser.displayName,
           email: authUser.email,
         }

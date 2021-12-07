@@ -1,12 +1,12 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
-import firebase from '../../firebase'
+import { AuthContext } from '../../context/auth'
+import { firebase, db } from '../../firebase'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import styles from './decks.module.css'
 
-const db = firebase.firestore()
-
 const Decks: FC = ({ }) => {
+  const { user } = useContext(AuthContext)
   const [isModalVisible, setIsModalVisible] = useState<bool>(false)
   const [deckName, setDeckName] = useState<string>('')
   const [decks, setDecks] = useState([])
@@ -25,7 +25,11 @@ const Decks: FC = ({ }) => {
 
   const handleSubmit = () => {
     try {
-      db.collection('decks').add({ name: deckName })
+      db.collection('decks').add({
+        name: deckName,
+        owners: [user.id],
+      })
+
       setIsModalVisible(false)
     } catch (err) {
       console.log(`#handleCreateDeck Error: ${err}`)

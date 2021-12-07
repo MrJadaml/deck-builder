@@ -1,26 +1,23 @@
 import { FC, useEffect, useState } from 'react'
 import { firebase } from '../../firebase'
-import { useCollection } from 'react-firebase-hooks/firestore'
 import { Card } from '../card'
 import styles from './cards.module.css'
 
-interface CardsTypes {
-  cards?: Array<any>
+interface CardTypes {
+  deckID: string
 }
 
-export const Cards: FC<CardsTypes> = ({ }) => {
+export const Cards: FC<CardTypes> = ({ deckID }) => {
   const [cards, setCards] = useState([])
-  const [cardDocs, cardDocsLoading, cardDocsError] = useCollection(
-    firebase.firestore().collection('cards'),
-    {},
-  )
 
-  useEffect(() => {
-    if (!cardDocsLoading && cards) {
-      const cards = cardDocs.docs.map(doc => doc.data())
-      setCards(cards)
-    }
-  }, [cardDocs])
+  useEffect(async () => {
+    const querySnapshot = await firebase.firestore()
+      .collection(`decks/${deckID}/cards`)
+      .get()
+
+    const cards = querySnapshot.docs.map(doc => doc.data())
+    setCards(cards)
+  }, [])
 
   return (
     <div className={styles.wrapper}>
