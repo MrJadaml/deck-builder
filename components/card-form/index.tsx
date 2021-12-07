@@ -5,12 +5,6 @@ import { AuthContext } from '../../context/auth'
 import { Card } from '../card'
 import styles from './card-form.module.css'
 
-interface Card {
-  title: string
-  description: string
-  flavorText: string
-}
-
 export const CardForm: FC = () => {
   const router = useRouter()
   const { did } = router.query
@@ -31,22 +25,21 @@ export const CardForm: FC = () => {
     setFlavorText(evt.target.value)
   }
 
-  const handleSave = async (card: Card) => {
+  const handleSubmit = async (evt: React.Form<HTMLFormElement>) => {
+    evt.preventDefault()
+
     try {
-      db.collection(`decks/${did}/cards`).add(card)
+      const nextCard = {
+        title,
+        description,
+        flavorText,
+      }
+
+      const docRef = db.collection(`decks/${did}/cards`).add(nexCard)
+      const doc = await docRef
     } catch (err) {
       console.log(`#handleSave Error: ${err}`)
     }
-  }
-
-  const handleSubmit = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    evt.preventDefault()
-
-    handleSave({
-      title,
-      description,
-      flavorText,
-    })
   }
 
   return (

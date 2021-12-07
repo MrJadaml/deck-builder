@@ -1,23 +1,11 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useContext, useEffect, useState } from 'react'
 import { firebase } from '../../firebase'
+import { CardsContext } from '../../context/cards'
 import { Card } from '../card'
 import styles from './cards.module.css'
 
-interface CardTypes {
-  deckID: string
-}
-
-export const Cards: FC<CardTypes> = ({ deckID }) => {
-  const [cards, setCards] = useState([])
-
-  useEffect(async () => {
-    const querySnapshot = await firebase.firestore()
-      .collection(`decks/${deckID}/cards`)
-      .get()
-
-    const cards = querySnapshot.docs.map(doc => doc.data())
-    setCards(cards)
-  }, [])
+export const Cards: FC = () => {
+  const { cards } = useContext(CardsContext)
 
   return (
     <div className={styles.wrapper}>

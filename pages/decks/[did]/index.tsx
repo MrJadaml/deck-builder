@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { firebase, db } from '../../../firebase'
 import { CardForm } from '../../../components/card-form'
 import { Cards } from '../../../components/cards'
+import { CardsProvider } from '../../../context/cards'
 import styles from './deck.module.css'
 
 const Deck: FC = ({ name }) => {
@@ -22,9 +23,11 @@ const Deck: FC = ({ name }) => {
     <div className={styles.wrapper}>
       <h1>{deck.name}</h1>
 
-      <CardForm />
-      <hr />
-      <Cards deckID={did} />
+      <CardsProvider>
+        <CardForm />
+        <hr />
+        <Cards />
+      </CardsProvider>
     </div>
   )
 }
