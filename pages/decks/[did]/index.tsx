@@ -23,6 +23,8 @@ const Deck: FC = ({ name }) => {
     <div className={styles.wrapper}>
       <h1>{deck.name}</h1>
 
+      <div>{deck.description}</div>
+
       <CardsProvider>
         <CardForm />
         <hr />

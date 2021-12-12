@@ -34,6 +34,8 @@ export const Layout: FC<> = ({ children }): JSX.Element => {
         {!user && router.pathname !== '/auth' && (
           <Link href="/auth">Log in</Link>
         )}
+
+        <hr />
       </header>
         { children }
       <footer>

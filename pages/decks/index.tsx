@@ -9,6 +9,7 @@ const Decks: FC = ({ }) => {
   const { user } = useContext(AuthContext)
   const [isModalVisible, setIsModalVisible] = useState<bool>(false)
   const [deckName, setDeckName] = useState<string>('')
+  const [deckDescription, setDeckDescription] = useState<string>('')
   const [decks, setDecks] = useState([])
 
   useEffect(async () => {
@@ -34,12 +35,17 @@ const Decks: FC = ({ }) => {
     setDeckName(evt.target.value)
   }
 
+  const handleDeckDescription = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setDeckDescription(evt.target.value)
+  }
+
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     try {
       evt.preventDefault()
 
       const nextDeck = {
         name: deckName,
+        description: deckDescription,
         owners: [user.id],
       }
 
@@ -83,6 +89,14 @@ const Decks: FC = ({ }) => {
               onChange={handleDeckName}
             />
 
+            <br />
+
+            <textarea
+              className={styles.field}
+              placeholder="Description..."
+              onChange={handleDeckDescription}
+            />
+
             <input
               className={styles.field}
               type="submit"
@@ -101,6 +115,10 @@ const Decks: FC = ({ }) => {
           >
             <div className={styles.tile}>
               <h2>{deck.name}</h2>
+              {deck.description && <hr />}
+              <div>
+                {deck.description}
+              </div>
             </div>
           </Link>
         ))}
