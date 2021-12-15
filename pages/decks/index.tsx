@@ -1,8 +1,8 @@
-import { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { AuthContext } from '../../context/auth'
 import { firebase, db } from '../../firebase'
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore'
+import { collection, doc, addDoc, getDocs, deleteDoc, query, where } from 'firebase/firestore'
 import styles from './decks.module.css'
 
 const Decks: FC = ({ }) => {
@@ -37,6 +37,13 @@ const Decks: FC = ({ }) => {
 
   const handleDeckDescription = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setDeckDescription(evt.target.value)
+  }
+
+  const handleDeleteDeck = async (deckID: string) => {
+    const nextDecks = decks.filter(deck => deck.id !== deckID)
+
+    setDecks(nextDecks)
+    await deleteDoc(doc(db, 'decks', deckID))    
   }
 
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
@@ -109,18 +116,21 @@ const Decks: FC = ({ }) => {
 
       <div className={styles.decks}>
         {decks.map((deck) => (
-          <Link
-            key={deck.name}
-            href={`/decks/${deck.id}`}
-          >
-            <div className={styles.tile}>
-              <h2>{deck.name}</h2>
-              {deck.description && <hr />}
-              <div>
-                {deck.description}
+          <div key={deck.name}>
+            <Link href={`/decks/${deck.id}`}>
+              <div className={styles.tile}>
+                <h2>{deck.name}</h2>
+                {deck.description && <hr />}
+                <div>
+                  {deck.description}
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+
+            <button onClick={() => { handleDeleteDeck(deck.id) }}>
+              Delete
+            </button>
+          </div>
         ))}
       </div>
     </div>
