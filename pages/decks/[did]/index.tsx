@@ -6,17 +6,25 @@ import { Cards } from '../../../components/cards'
 import { CardsProvider } from '../../../context/cards'
 import styles from './deck.module.css'
 
-const Deck: FC = ({ name }) => {
+const defaultDeck = {
+  name: '',
+  description: '',
+}
+
+const Deck: FC = () => {
   const router = useRouter()
   const { did } = router.query
-  const [deck, setDeck] = useState({ name: '' })
+  const [deck, setDeck] = useState(defaultDeck)
 
-  useEffect(async () => {
-    const doc = await db.collection('decks').doc(did).get()
+  useEffect(() => {
+    (async () => {
+      const doc = await db.collection('decks').doc(did as string).get()
 
-    if (doc.exists) {
-      setDeck(doc.data())
-    }
+      if (doc.exists) {
+        console.log(doc.data())
+        setDeck(doc.data())
+      }
+    })()
   }, [did])
 
   return (
