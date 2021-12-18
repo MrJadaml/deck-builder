@@ -6,6 +6,12 @@ import { Cards } from '../../../components/cards'
 import { CardsProvider } from '../../../context/cards'
 import styles from './deck.module.css'
 
+interface IDeck {
+  name?: string 
+  description?: string
+  owners?: string[]
+}
+
 const defaultDeck = {
   name: '',
   description: '',
@@ -14,15 +20,14 @@ const defaultDeck = {
 const Deck: FC = () => {
   const router = useRouter()
   const { did } = router.query
-  const [deck, setDeck] = useState(defaultDeck)
+  const [deck, setDeck] = useState<IDeck>(defaultDeck)
 
   useEffect(() => {
     (async () => {
       const doc = await db.collection('decks').doc(did as string).get()
 
       if (doc.exists) {
-        console.log(doc.data())
-        setDeck(doc.data())
+        setDeck(doc.data() || defaultDeck)
       }
     })()
   }, [did])
