@@ -4,6 +4,12 @@ import { CardsContext } from '../../context/cards'
 import { Card } from '../card'
 import styles from './cards.module.css'
 
+interface ICard {
+  title?: string
+  description?: string
+  flavorText?: string
+}
+
 export const Cards: FC = () => {
   const { cards } = useContext(CardsContext)
 

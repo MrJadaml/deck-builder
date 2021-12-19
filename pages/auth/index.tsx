@@ -10,7 +10,7 @@ const uiConfig = {
   ],
 }
 
-const Auth: FC<> = ({}): JSX.Element => {
+const Auth: FC = ({}): JSX.Element => {
   return (
     <div>
       <h1>Log In</h1>

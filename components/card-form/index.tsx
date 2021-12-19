@@ -8,7 +8,6 @@ import styles from './card-form.module.css'
 export const CardForm: FC = () => {
   const router = useRouter()
   const { did } = router.query
-  const [ user ] = useContext(AuthContext)
   const [title, setTitle] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [flavorText, setFlavorText] = useState<string>('')
@@ -25,7 +24,7 @@ export const CardForm: FC = () => {
     setFlavorText(evt.target.value)
   }
 
-  const handleSubmit = async (evt: React.Form<HTMLFormElement>) => {
+  const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
 
     try {
@@ -35,7 +34,7 @@ export const CardForm: FC = () => {
         flavorText,
       }
 
-      const docRef = db.collection(`decks/${did}/cards`).add(nexCard)
+      const docRef = db.collection(`decks/${did}/cards`).add(nextCard)
       const doc = await docRef
     } catch (err) {
       console.log(`#handleSave Error: ${err}`)

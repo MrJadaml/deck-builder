@@ -3,16 +3,17 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { firebase, db } from '../firebase'
 import { doc, setDoc } from 'firebase/firestore'
 
-export const AuthContext = createContext()
+interface IUser {
+  id: string
+  name: string | null
+  email: string | null
+}
+
+export const AuthContext = createContext({})
 
 export const AuthProvider: FC = ({ children }): JSX.Element => {
-  const [currentUser, setCurrentUser] = useState(null)
+  const [currentUser, setCurrentUser] = useState<IUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [user, setUser] = useState({
-    name: '',
-    email: '',
-  })
-
   const auth = getAuth()
 
   useEffect(() => {
@@ -20,12 +21,6 @@ export const AuthProvider: FC = ({ children }): JSX.Element => {
       const firestore = firebase.firestore()
 
       if (authUser) {
-        const requiredData = {
-          id: authUser.uid,
-          name: authUser.displayName,
-          email: authUser.email,
-        }
-
         const userDoc = await db.collection('users').doc(authUser.uid).get()
 
         if (!userDoc.exists) {
@@ -35,8 +30,13 @@ export const AuthProvider: FC = ({ children }): JSX.Element => {
           })
         }
 
-        setUser(requiredData)
-        setCurrentUser(authUser)
+        // sorting out difference between Auth User and creating a Firestore User "currentUser" to store 
+        // related docs and other data 
+        setCurrentUser({
+          id: authUser.uid,
+          name: authUser.displayName,
+          email: authUser.email,
+        })
 
       } else {
         setCurrentUser(null)
@@ -51,7 +51,7 @@ export const AuthProvider: FC = ({ children }): JSX.Element => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, setUser, isLoading }}>
+    <AuthContext.Provider value={{ currentUser, setCurrentUser, isLoading }}>
       {children}
     </AuthContext.Provider>
   )

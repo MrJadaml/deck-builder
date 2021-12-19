@@ -1,30 +1,44 @@
-import { FC, useContext, useEffect, useState } from 'react'
+import React, { FC, useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { AuthContext } from '../../context/auth'
 import { firebase, db } from '../../firebase'
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore'
+import { collection, doc, addDoc, getDocs, deleteDoc, query, where } from 'firebase/firestore'
 import styles from './decks.module.css'
 
+interface IUser {
+  id?: string
+  name: string
+  email: string
+}
+
+interface AuthContextType {
+  currentUser: IUser
+  setCurrentUser: () => void
+  isLoading: () => boolean
+}
+
 const Decks: FC = ({ }) => {
-  const { user } = useContext(AuthContext)
-  const [isModalVisible, setIsModalVisible] = useState<bool>(false)
+  const { currentUser } = useContext(AuthContext) as AuthContextType
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
   const [deckName, setDeckName] = useState<string>('')
   const [deckDescription, setDeckDescription] = useState<string>('')
-  const [decks, setDecks] = useState([])
+  const [decks, setDecks] = useState<any[]>([])
 
-  useEffect(async () => {
-    const decksRef = collection(db, 'decks')
-    const q = query(decksRef, where('owners', 'array-contains', user.id))
-    const deckDocs = await getDocs(q)
+  useEffect(() => {
+    (async () => {
+      const decksRef = collection(db, 'decks')
+      const q = query(decksRef, where('owners', 'array-contains', currentUser.id))
+      const deckDocs = await getDocs(q)
 
-    const docs = deckDocs.docs.map(doc => {
-      return {
-        id: doc.id,
-        ...doc.data()
-      }
-    })
+      const docs = deckDocs.docs.map(doc => {
+        return {
+          id: doc.id,
+          ...doc.data()
+        }
+      })
 
-    setDecks(docs)
+      setDecks(docs)
+    })()
   }, [])
 
   const handleToggelModal = () => {
@@ -35,8 +49,15 @@ const Decks: FC = ({ }) => {
     setDeckName(evt.target.value)
   }
 
-  const handleDeckDescription = (evt: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDeckDescription = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDeckDescription(evt.target.value)
+  }
+
+  const handleDeleteDeck = async (deckID: string) => {
+    const nextDecks = decks.filter(deck => deck.id !== deckID)
+
+    setDecks(nextDecks)
+    await deleteDoc(doc(db, 'decks', deckID))    
   }
 
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
@@ -46,7 +67,7 @@ const Decks: FC = ({ }) => {
       const nextDeck = {
         name: deckName,
         description: deckDescription,
-        owners: [user.id],
+        owners: [currentUser.id],
       }
 
       const docRef = db.collection('decks').add(nextDeck)
@@ -109,18 +130,21 @@ const Decks: FC = ({ }) => {
 
       <div className={styles.decks}>
         {decks.map((deck) => (
-          <Link
-            key={deck.name}
-            href={`/decks/${deck.id}`}
-          >
-            <div className={styles.tile}>
-              <h2>{deck.name}</h2>
-              {deck.description && <hr />}
-              <div>
-                {deck.description}
+          <div key={deck.name}>
+            <Link href={`/decks/${deck.id}`}>
+              <div className={styles.tile}>
+                <h2>{deck.name}</h2>
+                {deck.description && <hr />}
+                <div>
+                  {deck.description}
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+
+            <button onClick={() => { handleDeleteDeck(deck.id) }}>
+              Delete
+            </button>
+          </div>
         ))}
       </div>
     </div>
